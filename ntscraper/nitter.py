@@ -303,209 +303,213 @@ class Nitter:
         return soup
 
     def _get_quoted_media(self, quoted_tweet, is_encrypted):
-        """
-        Extract media from a quoted tweet
+        return [], [], []
+        #"""
+        #Extract media from a quoted tweet
 
-        :param quoted_tweet: tweet to extract media from
-        :param is_encrypted: True if instance uses encrypted media
-        :return: lists of images, videos and gifs, or empty lists if no media is found
-        """
-        quoted_pictures, quoted_videos, quoted_gifs = [], [], []
-        if quoted_tweet.find("div", class_="attachments"):
-            if is_encrypted:
-                quoted_pictures = [
-                    "https://pbs.twimg.com/"
-                    + b64decode(img["src"].split("/")[-1].encode("utf-8"))
-                    .decode("utf-8")
-                    .split("?")[0]
-                    for img in quoted_tweet.find("div", class_="attachments").find_all(
-                        "img"
-                    )
-                ]
-                quoted_videos = [
-                    b64decode(video["data-url"].split("/")[-1].encode("utf-8")).decode(
-                        "utf-8"
-                    )
-                    if "data-url" in video.attrs
-                    else video.find("source")["src"]
-                    for video in quoted_tweet.find(
-                        "div", class_="attachments"
-                    ).find_all("video", class_="")
-                ]
-                quoted_gifs = [
-                    "https://"
-                    + b64decode(
-                        gif.source["src"].split("/")[-1].encode("utf-8")
-                    ).decode("utf-8")
-                    for gif in quoted_tweet.find("div", class_="attachments").find_all(
-                        "video", class_="gif"
-                    )
-                ]
-            else:
-                quoted_pictures = [
-                    "https://pbs.twimg.com"
-                    + unquote(img["src"].split("/pic")[1]).split("?")[0]
-                    for img in quoted_tweet.find("div", class_="attachments").find_all(
-                        "img"
-                    )
-                ]
-                quoted_videos = [
-                    unquote("https" + video["data-url"].split("https")[1])
-                    if "data-url" in video.attrs
-                    else unquote(video.find("source")["src"])
-                    for video in quoted_tweet.find(
-                        "div", class_="attachments"
-                    ).find_all("video", class_="")
-                ]
-                quoted_gifs = [
-                    unquote("https://" + gif.source["src"].split("/pic/")[1])
-                    for gif in quoted_tweet.find("div", class_="attachments").find_all(
-                        "video", class_="gif"
-                    )
-                ]
-        return quoted_pictures, quoted_videos, quoted_gifs
+        #:param quoted_tweet: tweet to extract media from
+        #:param is_encrypted: True if instance uses encrypted media
+        #:return: lists of images, videos and gifs, or empty lists if no media is found
+        #"""
+        #quoted_pictures, quoted_videos, quoted_gifs = [], [], []
+        #if quoted_tweet.find("div", class_="attachments"):
+        #    if is_encrypted:
+        #        quoted_pictures = [
+        #            "https://pbs.twimg.com/"
+        #            + b64decode(img["src"].split("/")[-1].encode("utf-8"))
+        #            .decode("utf-8")
+        #            .split("?")[0]
+        #            for img in quoted_tweet.find("div", class_="attachments").find_all(
+        #                "img"
+        #            )
+        #        ]
+        #        quoted_videos = [
+        #            b64decode(video["data-url"].split("/")[-1].encode("utf-8")).decode(
+        #                "utf-8"
+        #            )
+        #            if "data-url" in video.attrs
+        #            else video.find("source")["src"]
+        #            for video in quoted_tweet.find(
+        #                "div", class_="attachments"
+        #            ).find_all("video", class_="")
+        #        ]
+        #        quoted_gifs = [
+        #            "https://"
+        #            + b64decode(
+        #                gif.source["src"].split("/")[-1].encode("utf-8")
+        #            ).decode("utf-8")
+        #            for gif in quoted_tweet.find("div", class_="attachments").find_all(
+        #                "video", class_="gif"
+        #            )
+        #        ]
+        #    else:
+        #        quoted_pictures = [
+        #            "https://pbs.twimg.com"
+        #            + unquote(img["src"].split("/pic")[1]).split("?")[0]
+        #            for img in quoted_tweet.find("div", class_="attachments").find_all(
+        #                "img"
+        #            )
+        #        ]
+        #        quoted_videos = [
+        #            unquote("https" + video["data-url"].split("https")[1])
+        #            if "data-url" in video.attrs
+        #            else unquote(video.find("source")["src"])
+        #            for video in quoted_tweet.find(
+        #                "div", class_="attachments"
+        #            ).find_all("video", class_="")
+        #        ]
+        #        quoted_gifs = [
+        #            unquote("https://" + gif.source["src"].split("/pic/")[1])
+        #            for gif in quoted_tweet.find("div", class_="attachments").find_all(
+        #                "video", class_="gif"
+        #            )
+        #        ]
+        #return quoted_pictures, quoted_videos, quoted_gifs
 
     def _get_tweet_media(self, tweet, is_encrypted):
-        """
-        Extract media from a tweet
+        return [], [], []
+        #"""
+        #Extract media from a tweet
 
-        :param tweet: tweet to extract media from
-        :param is_encrypted: True if instance uses encrypted media
-        :return: lists of images, videos and gifs, or empty lists if no media is found
-        """
-        pictures, videos, gifs = [], [], []
-        if tweet.find("div", class_="tweet-body").find(
-            "div", class_="attachments", recursive=False
-        ):
-            if is_encrypted:
-                pictures = [
-                    "https://pbs.twimg.com/"
-                    + b64decode(img["src"].split("/")[-1].encode("utf-8"))
-                    .decode("utf-8")
-                    .split("?")[0]
-                    for img in tweet.find("div", class_="tweet-body")
-                    .find("div", class_="attachments", recursive=False)
-                    .find_all("img")
-                ]
-                videos = [
-                    b64decode(video["data-url"].split("/")[-1].encode("utf-8")).decode(
-                        "utf-8"
-                    )
-                    if "data-url" in video.attrs
-                    else video.find("source")["src"]
-                    for video in tweet.find("div", class_="tweet-body")
-                    .find("div", class_="attachments", recursive=False)
-                    .find_all("video", class_="")
-                ]
-                gifs = [
-                    "https://"
-                    + b64decode(
-                        gif.source["src"].split("/")[-1].encode("utf-8")
-                    ).decode("utf-8")
-                    for gif in tweet.find("div", class_="tweet-body")
-                    .find("div", class_="attachments", recursive=False)
-                    .find_all("video", class_="gif")
-                ]
-            else:
-                pictures = [
-                    "https://pbs.twimg.com"
-                    + unquote(img["src"].split("/pic")[1]).split("?")[0]
-                    for img in tweet.find("div", class_="tweet-body")
-                    .find("div", class_="attachments", recursive=False)
-                    .find_all("img")
-                ]
-                videos = [
-                    unquote("https" + video["data-url"].split("https")[1])
-                    if "data-url" in video.attrs
-                    else video.find("source")["src"]
-                    for video in tweet.find("div", class_="tweet-body")
-                    .find("div", class_="attachments", recursive=False)
-                    .find_all("video", class_="")
-                ]
-                gifs = [
-                    unquote("https://" + gif.source["src"].split("/pic/")[1])
-                    for gif in tweet.find("div", class_="tweet-body")
-                    .find("div", class_="attachments", recursive=False)
-                    .find_all("video", class_="gif")
-                ]
-        return pictures, videos, gifs
+        #:param tweet: tweet to extract media from
+        #:param is_encrypted: True if instance uses encrypted media
+        #:return: lists of images, videos and gifs, or empty lists if no media is found
+        #"""
+        #pictures, videos, gifs = [], [], []
+        #if tweet.find("div", class_="tweet-body").find(
+        #    "div", class_="attachments", recursive=False
+        #):
+        #    if is_encrypted:
+        #        pictures = [
+        #            "https://pbs.twimg.com/"
+        #            + b64decode(img["src"].split("/")[-1].encode("utf-8"))
+        #            .decode("utf-8")
+        #            .split("?")[0]
+        #            for img in tweet.find("div", class_="tweet-body")
+        #            .find("div", class_="attachments", recursive=False)
+        #            .find_all("img")
+        #        ]
+        #        videos = [
+        #            b64decode(video["data-url"].split("/")[-1].encode("utf-8")).decode(
+        #                "utf-8"
+        #            )
+        #            if "data-url" in video.attrs
+        #            else video.find("source")["src"]
+        #            for video in tweet.find("div", class_="tweet-body")
+        #            .find("div", class_="attachments", recursive=False)
+        #            .find_all("video", class_="")
+        #        ]
+        #        gifs = [
+        #            "https://"
+        #            + b64decode(
+        #                gif.source["src"].split("/")[-1].encode("utf-8")
+        #            ).decode("utf-8")
+        #            for gif in tweet.find("div", class_="tweet-body")
+        #            .find("div", class_="attachments", recursive=False)
+        #            .find_all("video", class_="gif")
+        #        ]
+        #    else:
+        #        pictures = [
+        #            "https://pbs.twimg.com"
+        #            + unquote(img["src"].split("/pic")[1]).split("?")[0]
+        #            for img in tweet.find("div", class_="tweet-body")
+        #            .find("div", class_="attachments", recursive=False)
+        #            .find_all("img")
+        #        ]
+        #        videos = [
+        #            unquote("https" + video["data-url"].split("https")[1])
+        #            if "data-url" in video.attrs
+        #            else video.find("source")["src"]
+        #            for video in tweet.find("div", class_="tweet-body")
+        #            .find("div", class_="attachments", recursive=False)
+        #            .find_all("video", class_="")
+        #        ]
+        #        gifs = [
+        #            unquote("https://" + gif.source["src"].split("/pic/")[1])
+        #            for gif in tweet.find("div", class_="tweet-body")
+        #            .find("div", class_="attachments", recursive=False)
+        #            .find_all("video", class_="gif")
+        #        ]
+        #return pictures, videos, gifs
 
     def _get_tweet_stats(self, tweet):
-        """
-        Extract stats from a tweet
+        return {}
+        #"""
+        #Extract stats from a tweet
 
-        :param tweet: tweet to extract stats from
-        :return: dictionary of stats. If a stat is not found, it is set to 0
-        """
-        return {
-            "comments": int(
-                tweet.find_all("span", class_="tweet-stat")[0]
-                .find("div")
-                .text.strip()
-                .replace(",", "")
-                or 0
-            ),
-            "retweets": int(
-                tweet.find_all("span", class_="tweet-stat")[1]
-                .find("div")
-                .text.strip()
-                .replace(",", "")
-                or 0
-            ),
-            "quotes": int(
-                tweet.find_all("span", class_="tweet-stat")[2]
-                .find("div")
-                .text.strip()
-                .replace(",", "")
-                or 0
-            ),
-            "likes": int(
-                tweet.find_all("span", class_="tweet-stat")[3]
-                .find("div")
-                .text.strip()
-                .replace(",", "")
-                or 0
-            ),
-        }
+        #:param tweet: tweet to extract stats from
+        #:return: dictionary of stats. If a stat is not found, it is set to 0
+        #"""
+        #return {
+        #    "comments": int(
+        #        tweet.find_all("span", class_="tweet-stat")[0]
+        #        .find("div")
+        #        .text.strip()
+        #        .replace(",", "")
+        #        or 0
+        #    ),
+        #    "retweets": int(
+        #        tweet.find_all("span", class_="tweet-stat")[1]
+        #        .find("div")
+        #        .text.strip()
+        #        .replace(",", "")
+        #        or 0
+        #    ),
+        #    "quotes": int(
+        #        tweet.find_all("span", class_="tweet-stat")[2]
+        #        .find("div")
+        #        .text.strip()
+        #        .replace(",", "")
+        #        or 0
+        #    ),
+        #    "likes": int(
+        #        tweet.find_all("span", class_="tweet-stat")[3]
+        #        .find("div")
+        #        .text.strip()
+        #        .replace(",", "")
+        #        or 0
+        #    ),
+        #}
 
     def _get_user(self, tweet, is_encrypted):
-        """
-        Extract user from a tweet
+        return {}
+        #"""
+        #Extract user from a tweet
 
-        :param tweet: tweet to extract user from
-        :param is_encrypted: True if instance uses encrypted media
-        :return: dictionary of user
-        """
-        avatar = "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"  # Default avatar
-        profile_id = "unknown"  # Default profile ID
+        #:param tweet: tweet to extract user from
+        #:param is_encrypted: True if instance uses encrypted media
+        #:return: dictionary of user
+        #"""
+        #avatar = "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"  # Default avatar
+        #profile_id = "unknown"  # Default profile ID
 
-        if is_encrypted:
-            try:
-                avatar = "https://pbs.twimg.com/" + b64decode(
-                    tweet.find("img", class_="avatar")["src"]
-                    .split("/")[-1]
-                    .encode("utf-8")
-                ).decode("utf-8")
-            except:
-                avatar = "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"  # Fallback avatar
+        #if is_encrypted:
+        #    try:
+        #        avatar = "https://pbs.twimg.com/" + b64decode(
+        #            tweet.find("img", class_="avatar")["src"]
+        #            .split("/")[-1]
+        #            .encode("utf-8")
+        #        ).decode("utf-8")
+        #    except:
+        #        avatar = "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"  # Fallback avatar
 
-        else:
-            avatar_tag = tweet.find("img", class_="avatar")
-            if avatar_tag and avatar_tag.has_attr("src"):
-                avatar = unquote(avatar_tag["src"])  # Successfully getting avatar
-            else:
-                avatar = "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"  # Fallback avatar
+        #else:
+        #    avatar_tag = tweet.find("img", class_="avatar")
+        #    if avatar_tag and avatar_tag.has_attr("src"):
+        #        avatar = unquote(avatar_tag["src"])  # Successfully getting avatar
+        #    else:
+        #        avatar = "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"  # Fallback avatar
 
-        # Extract profile_id directly from the avatar URL if available
-        if "profile_images" in avatar:
-            profile_id = avatar.split("/profile_images/")[1].split("/")[0]
+        ## Extract profile_id directly from the avatar URL if available
+        ## if "profile_images" in avatar:
+        ##     profile_id = avatar.split("/profile_images/")[1].split("/")[0]
 
-        return {
-            "name": tweet.find("a", class_="fullname").text.strip(),
-            "username": tweet.find("a", class_="username").text.strip(),
-            "profile_id": profile_id,
-            "avatar": avatar,
-        }
+        #return {
+        #    "name": tweet.find("a", class_="fullname").text.strip(),
+        #    "username": tweet.find("a", class_="username").text.strip(),
+        #    "profile_id": profile_id,
+        #    "avatar": avatar,
+        #}
 
     def _get_tweet_date(self, tweet):
         """
@@ -589,31 +593,31 @@ class Nitter:
         :return: dictionary of content for the tweet
         """
         # Replace link text with link
-        if tweet.find_all("a"):
-            for link in tweet.find_all("a"):
-                if "https" in link["href"]:
-                    link.replace_with(link["href"])
+        #if tweet.find_all("a"):
+        #    for link in tweet.find_all("a"):
+        #        if "https" in link["href"]:
+        #            link.replace_with(link["href"])
 
         # Extract the quoted tweet
-        quoted_tweet = (
-            tweet.find("div", class_="quote")
-            if tweet.find("div", class_="quote")
-            else None
-        )
+        #quoted_tweet = (
+        #    tweet.find("div", class_="quote")
+        #    if tweet.find("div", class_="quote")
+        #    else None
+        #)
 
         # Extract media from the quoted tweet
-        if quoted_tweet:
-            deleted = False
-            if quoted_tweet["class"] == ["quote", "unavailable"]:
-                deleted = True
-            (
-                quoted_pictures,
-                quoted_videos,
-                quoted_gifs,
-            ) = self._get_quoted_media(quoted_tweet, is_encrypted)
+        #if quoted_tweet:
+        #    deleted = False
+        #    if quoted_tweet["class"] == ["quote", "unavailable"]:
+        #        deleted = True
+        #    (
+        #        quoted_pictures,
+        #        quoted_videos,
+        #        quoted_gifs,
+        #    ) = self._get_quoted_media(quoted_tweet, is_encrypted)
 
         # Extract media from the tweet
-        pictures, videos, gifs = self._get_tweet_media(tweet, is_encrypted)
+        #pictures, videos, gifs = self._get_tweet_media(tweet, is_encrypted)
 
         # Extract the tweet id
         link = self._get_tweet_link(tweet)
@@ -623,29 +627,29 @@ class Nitter:
             "id": id,
             "link": link,
             "text": self._get_tweet_text(tweet),
-            "user": self._get_user(tweet, is_encrypted),
-            "date": self._get_tweet_date(tweet),
-            "is-retweet": tweet.find("div", class_="retweet-header") is not None,
-            "is-pinned": tweet.find("div", class_="pinned") is not None,
-            "external-link": self._get_external_link(tweet),
-            "replying-to": self._get_replied_to(tweet),
-            "quoted-post": {
-                "link": self._get_tweet_link(quoted_tweet) if not deleted else "",
-                "text": self._get_tweet_text(quoted_tweet) if not deleted else "",
-                "user": self._get_user(quoted_tweet, is_encrypted)
-                if not deleted
-                else {},
-                "date": self._get_tweet_date(quoted_tweet) if not deleted else "",
-                "pictures": quoted_pictures,
-                "videos": quoted_videos,
-                "gifs": quoted_gifs,
-            }
-            if quoted_tweet
-            else {},
-            "stats": self._get_tweet_stats(tweet),
-            "pictures": pictures,
-            "videos": videos,
-            "gifs": gifs,
+            #"user": self._get_user(tweet, is_encrypted),
+            "date": self._get_tweet_date(tweet)
+            #"is-retweet": tweet.find("div", class_="retweet-header") is not None,
+            #"is-pinned": tweet.find("div", class_="pinned") is not None,
+            #"external-link": self._get_external_link(tweet),
+            #"replying-to": self._get_replied_to(tweet),
+            #"quoted-post": {
+            #    "link": self._get_tweet_link(quoted_tweet) if not deleted else "",
+            #    "text": self._get_tweet_text(quoted_tweet) if not deleted else "",
+            #    "user": self._get_user(quoted_tweet, is_encrypted)
+            #    if not deleted
+            #    else {},
+            #    "date": self._get_tweet_date(quoted_tweet) if not deleted else "",
+            #    "pictures": quoted_pictures,
+            #    "videos": quoted_videos,
+            #    "gifs": quoted_gifs,
+            #}
+            #if quoted_tweet
+            #else {},
+            #"stats": self._get_tweet_stats(tweet),
+            #"pictures": pictures,
+            #"videos": videos,
+            #"gifs": gifs,
         }
 
     def _check_date_validity(self, date):
